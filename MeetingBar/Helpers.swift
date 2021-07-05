@@ -53,6 +53,20 @@ func openLinkInChromium(_ link: URL) {
     }
 }
 
+func openLinkInFirefox(_ link: URL) {
+    let configuration = NSWorkspace.OpenConfiguration()
+    let firefoxUrl = URL(fileURLWithPath: "/Applications/Firefox.app")
+    NSWorkspace.shared.open([link], withApplicationAt: firefoxUrl, configuration: configuration) { app, error in
+        if app != nil {
+            NSLog("Open \(link) in Firefox")
+        } else {
+            NSLog("Can't open \(link) in Firefox: \(String(describing: error?.localizedDescription))")
+            sendNotification(title: "Oops! Unable to open the link in Firefox", text: "Make sure you have Firefox installed, or change the browser in the preferences.")
+            _ = openLinkInDefaultBrowser(link)
+        }
+    }
+}
+
 func openLinkInDefaultBrowser(_ link: URL) -> Bool {
     let result = NSWorkspace.shared.open(link)
     if result {
